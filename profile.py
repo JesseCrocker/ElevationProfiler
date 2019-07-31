@@ -20,7 +20,6 @@ def generate_profile(options, files):
 
     for track in tracks:
         for segment in track.segments:
-            # with pyplot.xkcd():
             generate_segment_profile(options, segment, waypoints, title=track.name)
 
 
