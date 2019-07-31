@@ -48,13 +48,13 @@ def generate_segment_profile(
         last_point = point
 
     fig, ax = pyplot.subplots(figsize=(8, 3), dpi=300)
-    ax.plot(df["distance"], df["alt"])
+    ax.plot(df["distance"], df["alt"], color="#666666", linewidth=0.8)
     ax.set_xlim(0, distance)
     if axis_labels:
         ax.set(xlabel="Miles", ylabel="Feet", title=title)
     elif title:
         ax.set(title=title)
-    ax.grid()
+    ax.grid(color="#dddddd")
 
     for waypoint in waypoints:
         x = None
@@ -75,7 +75,10 @@ def generate_segment_profile(
                 y = getattr(row, "alt")
 
         if x is not None and y is not None:
-            ax.annotate(waypoint.name, xy=(x, y), xycoords="data", rotation=90)
+            # ax.annotate(waypoint.name, xy=(x, y), xycoords="data", rotation=90)
+            ax.plot(x, y, "x", color="#dddddd")
+            ax.text(x, y, waypoint.name, fontsize=6)
+
     fig.savefig("test.png")
     # pyplot.show()
 
