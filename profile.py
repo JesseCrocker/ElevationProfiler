@@ -5,6 +5,7 @@ from optparse import OptionParser
 
 import gpxpy
 import pandas
+from adjustText import adjust_text
 from haversine import haversine
 from haversine import Unit
 from matplotlib import pyplot
@@ -56,6 +57,7 @@ def generate_segment_profile(
         ax.set(title=title)
     ax.grid(color="#dddddd")
 
+    labels = []
     for waypoint in waypoints:
         x = None
         y = None
@@ -75,9 +77,17 @@ def generate_segment_profile(
                 y = getattr(row, "alt")
 
         if x is not None and y is not None:
-            # ax.annotate(waypoint.name, xy=(x, y), xycoords="data", rotation=90)
-            ax.plot(x, y, "x", color="#dddddd")
-            ax.text(x, y, waypoint.name, fontsize=6)
+            labels.append(pyplot.text(x, y, waypoint.name, fontsize=6))
+
+    if options.avoid_lines:
+        adjust_text(
+            labels,
+            x=df["distance"],
+            y=df["alt"],
+            arrowprops=dict(arrowstyle="->", color="black", lw=0.3),
+        )
+    else:
+        adjust_text(labels, arrowprops=dict(arrowstyle="->", color="black", lw=0.3))
 
     fig.savefig("test.png")
     # pyplot.show()
@@ -91,6 +101,13 @@ def _main():
     )
     parser.add_option(
         "-q", "--quiet", action="store_true", dest="quiet", help="turn off all logging"
+    )
+    parser.add_option(
+        "-l",
+        "--avoid-lines",
+        action="store_true",
+        dest="avoid_lines",
+        help="Dont let labels overlap lines",
     )
 
     (options, args) = parser.parse_args()
