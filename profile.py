@@ -88,7 +88,8 @@ def generate_segment_profile(
     else:
         adjust_text(labels, arrowprops=dict(arrowstyle="->", color="black", lw=0.3))
 
-    fig.savefig("test.png")
+    pyplot.tight_layout()
+    fig.savefig(title + ".png")
     # pyplot.show()
 
 
